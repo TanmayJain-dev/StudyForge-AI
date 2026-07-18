@@ -1,18 +1,51 @@
+# =========================
 # Environment
+# =========================
 .env
 
+# =========================
 # Python
+# =========================
+.venv/
 __pycache__/
 *.py[cod]
+*.pyo
+.pytest_cache/
 
-# Virtual environment
-.venv/
-
+# =========================
 # IDE
+# =========================
 .vscode/
 
-# Generated files
+# =========================
+# Generated Files
+# =========================
 outputs/
+uploads/
 
-# Local documents
+# Runtime cache
+storage/cache/
+storage/sessions/
+
+# =========================
+# Local Documents
+# =========================
 sample_docs/
+data/
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Temporary storage
+# =========================
+storage/sessions/
+uploads/
+
+# =========================
+# Test scripts
+# =========================
+test_*.py

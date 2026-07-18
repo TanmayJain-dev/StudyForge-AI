@@ -2,9 +2,28 @@ from parsers.pdf_parser import extract_pages_from_pdf
 from parsers.vision_parser import render_pdf_page
 from core.llm import ask_gemini_with_image
 from core.document import DocumentPage
+from config import ENABLE_VISION
+from core.cache import (
+    load_cache,
+    save_cache
+)
 
 
 def load_pdf(pdf_path: str, max_pages: int | None = None):
+    cached_pages = load_cache(pdf_path)
+
+    if cached_pages is not None:
+
+        print("Loading document from cache")
+
+        return [
+            DocumentPage(
+                page_number=page["page_number"],
+                content=page["content"],
+                source=page["source"]
+            )
+            for page in cached_pages
+        ]
     """
     Load a PDF and extract content intelligently.
 
@@ -38,12 +57,27 @@ def load_pdf(pdf_path: str, max_pages: int | None = None):
             extracted_pages.append(
                 DocumentPage(
                     page_number=page_number,
-                    content=text_page_map[page_number],
+                    content=str(text_page_map[page_number]),
                     source="pdf_text"
                 )
             )
 
         else:
+
+            if not ENABLE_VISION:
+                print(
+                    f"Skipping Gemini Vision for page {page_number}"
+                )
+
+                extracted_pages.append(
+                    DocumentPage(
+                        page_number=page_number,
+                        content="",
+                        source="vision_disabled"
+                    )
+                )
+
+                continue
 
             print(
                 f"Using Gemini Vision for page {page_number}"
@@ -72,5 +106,10 @@ def load_pdf(pdf_path: str, max_pages: int | None = None):
             )
 
     document.close()
+
+    save_cache(
+        pdf_path,
+        extracted_pages
+    )
 
     return extracted_pages

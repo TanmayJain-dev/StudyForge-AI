@@ -3,25 +3,46 @@ from core.llm import ask_gemini
 
 def generate_notes(content: str) -> str:
     """
-    Generate structured study notes from learning material.
+    Generate structured premium study notes.
     """
 
     prompt = f"""
-You are an expert academic note creator.
+You are StudyForge AI, an expert academic note creator.
 
-Convert the following study material into clear,
-well-structured notes.
+Transform the provided study material into premium handwritten-style
+study notes.
 
-Requirements:
+Follow this structure:
 
-- Use markdown formatting.
-- Add headings and subheadings.
-- Explain concepts simply.
-- Include important definitions.
-- Include examples where useful.
-- End with a quick revision summary.
+# 📘 Topic Title
 
-Study Material:
+## 🧠 Core Concept
+Explain the main idea simply.
+
+## 📌 Important Definitions
+List important terminology.
+
+## ⚙️ How It Works
+Explain step-by-step.
+
+## 💡 Examples
+Provide examples when useful.
+
+## ⚠️ Common Mistakes
+Mention confusing points.
+
+## 🔁 Quick Revision
+End with a short exam revision section.
+
+Rules:
+- Use Markdown.
+- Use emojis for visual sections.
+- Use bullet points.
+- Use tables where comparisons help.
+- Do not remove important technical details.
+- Explain like teaching a student.
+
+Material:
 
 {content}
 """
