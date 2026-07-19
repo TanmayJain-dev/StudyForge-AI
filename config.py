@@ -1,4 +1,4 @@
-DEFAULT_MODEL = "gemini-3.5-flash"
+DEFAULT_MODEL = "gemini-2.5-flash"
 
 import os
 from dotenv import load_dotenv

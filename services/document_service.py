@@ -1,6 +1,8 @@
 from core.document_loader import load_pdf
 import hashlib
 from pathlib import Path
+from PIL import Image
+from core.llm import ask_gemini_with_image
 
 class DocumentService:
 
@@ -9,6 +11,22 @@ class DocumentService:
         file_path: str,
         max_pages: int = 5
     ) -> str:
+
+
+        extension = Path(file_path).suffix.lower()
+
+
+        if extension in [".png", ".jpg", ".jpeg"]:
+            with open(file_path, "rb") as f:
+                image_bytes = f.read()
+
+            return ask_gemini_with_image(
+                """
+                Extract all readable text from this image.
+                Preserve headings, formulas, and important details.
+                """,
+                image_bytes
+            )
 
         document_hash = DocumentService.calculate_hash(
             file_path

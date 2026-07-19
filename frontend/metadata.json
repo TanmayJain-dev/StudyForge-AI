@@ -1,0 +1,6 @@
+{
+  "name": "StudyForge AI",
+  "description": "An AI-powered study assistant that transforms uploaded documents into intelligent learning material including notes, flashcards, quizzes, and revision sheets.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
