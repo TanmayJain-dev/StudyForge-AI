@@ -6,33 +6,48 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'motion/react';
 import { ArrowLeft, RotateCw, ChevronLeft, ChevronRight, Layers } from 'lucide-react';
 import LoadingState from '@/components/LoadingState';
+import { getApiUrl } from '@/lib/api';
 
 interface Flashcard {
   front: string;
   back: string;
 }
 
+const DEFAULT_FLASHCARDS: Flashcard[] = [
+  {
+    front: "What is the CAP Theorem in Distributed Systems?",
+    back: "A fundamental theorem stating that a distributed system cannot simultaneously guarantee Consistency, Availability, and Partition Tolerance. Under network partitions, an architect must choose between CP and AP."
+  },
+  {
+    front: "How does Raft maintain consensus across distributed nodes?",
+    back: "Raft achieves consensus via randomized Leader Election, append-only Log Replication, and strict Safety guarantees requiring a quorum majority."
+  },
+  {
+    front: "What are Virtual Nodes (VNodes) in Consistent Hashing?",
+    back: "Virtual nodes assign multiple hash positions on the ring to each physical machine, eliminating hot-spotting and ensuring balanced key distribution."
+  }
+];
+
 function FlashcardsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
   const type = searchParams.get('type') || 'medium';
-  const filename = searchParams.get('filename') || 'Document';
+  const filename = searchParams.get('filename') || 'Distributed Systems Guide.pdf';
   const content = searchParams.get("notes") || "";
 
-  
-  const [isGenerating, setIsGenerating] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [cards, setCards] = useState<Flashcard[]>([]);
+  const [cards, setCards] = useState<Flashcard[]>(DEFAULT_FLASHCARDS);
 
   useEffect(() => {
     async function loadFlashcards() {
-
+      if (!content) return;
+      setIsGenerating(true);
       try {
-
         const response = await fetch(
-          "http://localhost:8000/api/flashcards",
+          getApiUrl("/api/flashcards"),
           {
             method: "POST",
             headers: {

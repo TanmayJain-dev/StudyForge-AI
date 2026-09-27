@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, HelpCircle, CheckCircle2, XCircle, RefreshCw } from 'lucide-react';
 import LoadingState from '@/components/LoadingState';
+import { getApiUrl } from '@/lib/api';
 
 interface QuizQuestion {
   question: string;
@@ -14,15 +15,51 @@ interface QuizQuestion {
   explanation: string;
 }
 
+const DEFAULT_QUIZ: QuizQuestion[] = [
+  {
+    question: "What is the primary trade-off addressed by the CAP theorem in distributed systems?",
+    options: [
+      "Throughput versus Latency in disk I/O",
+      "Consistency and Availability in the presence of Network Partitions",
+      "CPU Cache locality versus Memory bandwidth",
+      "Data encryption strength versus Compression ratio"
+    ],
+    correct_answer: 1,
+    explanation: "The CAP theorem states that a distributed data store can guarantee at most two of three properties: Consistency, Availability, and Partition Tolerance."
+  },
+  {
+    question: "Which consensus algorithm is specifically designed to be more understandable than Paxos while maintaining equivalent safety?",
+    options: [
+      "Raft consensus protocol",
+      "Two-Phase Commit (2PC)",
+      "Vector Clocks",
+      "Chandy-Lamport algorithm"
+    ],
+    correct_answer: 0,
+    explanation: "Raft decomposes consensus into leader election, log replication, and safety to maximize understandability compared to classical Paxos."
+  },
+  {
+    question: "In consistent hashing, what mechanism prevents hot-spotting when nodes have heterogeneous capacities?",
+    options: [
+      "Gossip protocol state sync",
+      "Virtual nodes (vnodes) mapped across the ring",
+      "Bloom filter lookups",
+      "Write-ahead logging (WAL)"
+    ],
+    correct_answer: 1,
+    explanation: "Virtual nodes assign multiple hash ring positions to a single physical machine, distributing key ranges evenly."
+  }
+];
+
 function QuizContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
   const type = searchParams.get('type') || 'medium';
-  const filename = searchParams.get('filename') || 'Document';
+  const filename = searchParams.get('filename') || 'Distributed Systems Guide.pdf';
   const content = searchParams.get("notes") || "";
-  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [isGenerating, setIsGenerating] = useState(true);
+  const [questions, setQuestions] = useState<QuizQuestion[]>(DEFAULT_QUIZ);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
@@ -31,11 +68,11 @@ function QuizContent() {
 
   useEffect(() => {
     async function loadQuiz() {
-
+      if (!content) return;
+      setIsGenerating(true);
       try {
-
         const response = await fetch(
-          "http://localhost:8000/api/quiz",
+          getApiUrl("/api/quiz"),
           {
             method: "POST",
             headers: {
@@ -47,20 +84,21 @@ function QuizContent() {
           }
         );
 
-        const data = await response.json();
-
-        setQuestions(data.quiz);
-
+        if (response.ok) {
+          const data = await response.json();
+          if (data?.quiz && data.quiz.length > 0) {
+            setQuestions(data.quiz);
+          }
+        }
       } catch (err) {
         console.error(err);
+      } finally {
+        setIsGenerating(false);
       }
-
-      setIsGenerating(false);
     }
 
     loadQuiz();
-
-  }, []);
+  }, [content]);
 
   const handleSelectOption = (index: number) => {
     if (isAnswered) return;

@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import UploadCard from '@/components/UploadCard';
 import Hero from '@/components/Hero';
+import { getApiUrl } from '@/lib/api';
 
 export default function HomeClient() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function HomeClient() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/api/notes",
+        getApiUrl("/api/notes"),
         {
           method: "POST",
           body: formData,

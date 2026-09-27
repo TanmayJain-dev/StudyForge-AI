@@ -6,27 +6,46 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'motion/react';
 import { ArrowLeft, Zap, Download, Copy, Check } from 'lucide-react';
 import LoadingState from '@/components/LoadingState';
+import { getApiUrl } from '@/lib/api';
+
+const DEFAULT_REVISION = `# Key Concepts
+
+- CAP Theorem: Must choose Consistency (CP) or Availability (AP) during network partitions.
+- Consensus Protocols: Raft and Paxos ensure state machine replication despite node failures.
+- Consistent Hashing: Minimizes key remapping during cluster resizing.
+- Storage Engines: LSM-Trees optimize write throughput; B-Trees optimize point-read lookups.
+
+# Important Terms
+
+- Split-Brain : Situation where network partition causes multiple nodes to believe they are the leader.
+- Quorum : Minimum number of node acknowledgments required to consider an operation committed.
+- Vector Clock : Mechanism for capturing causal relationships between events in distributed systems without synchronized physical clocks.
+
+# Quick Summary
+
+- Design for failure: Networks will partition, disks will fail, nodes will pause (GC).
+- Trade off latency vs consistency: Eventual consistency enables high availability at the cost of stale reads.
+`;
 
 function RevisionContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
   const type = searchParams.get('type') || '5min';
-  const filename = searchParams.get('filename') || 'Document';
+  const filename = searchParams.get('filename') || 'Distributed Systems Guide.pdf';
   const content = searchParams.get("notes") || "";
   
-  const [isGenerating, setIsGenerating] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [revision, setRevision] = useState("");
+  const [revision, setRevision] = useState(DEFAULT_REVISION);
 
   useEffect(() => {
-
     async function loadRevision(){
-
+      if (!content) return;
+      setIsGenerating(true);
       try{
-
         const response = await fetch(
-          "http://localhost:8000/api/revision",
+          getApiUrl("/api/revision"),
           {
             method:"POST",
             headers:{

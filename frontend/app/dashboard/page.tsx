@@ -18,9 +18,9 @@ function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  const filename = searchParams.get('filename') || 'Uploaded Document.pdf';
+  const filename = searchParams.get('filename') || 'Distributed Systems Architecture Guide.pdf';
   const sizeStr = searchParams.get('size');
-  const size = sizeStr ? parseInt(sizeStr, 10) : 2500000;
+  const size = sizeStr ? parseInt(sizeStr, 10) : 3485760;
 
   // Receive AI-generated content from upload response
   const notes = searchParams.get('notes') || "";

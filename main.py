@@ -13,14 +13,11 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000"
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 app.include_router(
     router,
@@ -35,5 +32,16 @@ app.include_router(
 @app.get("/")
 def home():
     return {
-        "message": "StudyForge AI API running"
+        "message": "StudyForge AI API running",
+        "docs": "/docs"
+    }
+
+@app.get("/api/health")
+def health():
+    import os
+    return {
+        "status": "healthy",
+        "service": "StudyForge AI API",
+        "version": "1.0",
+        "gemini_configured": bool(os.getenv("GEMINI_API_KEY"))
     }

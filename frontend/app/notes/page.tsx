@@ -6,28 +6,56 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'motion/react';
 import { ArrowLeft, Download, Copy, Check, FileText } from 'lucide-react';
 import LoadingState from '@/components/LoadingState';
+import { getApiUrl } from '@/lib/api';
+
+const DEFAULT_NOTES = `# 📘 Distributed Systems Architecture & Fault Tolerance
+
+## 🧠 Core Concept
+Distributed systems coordinate autonomous computing nodes over an unreliable network to deliver the illusion of a single coherent system. The fundamental challenge is managing partial failure, network latency, and the absence of a shared global clock.
+
+## 📌 Important Definitions
+- **Consistency**: Every read receives the most recent write or an error.
+- **Availability**: Every non-failing node returns a non-error response without guaranteeing latest data.
+- **Partition Tolerance**: System continues functioning despite arbitrary network message loss or delay.
+- **Quorum**: The minimum vote majority required to commit transactions safely.
+
+## ⚙️ How It Works
+1. **Client Request**: Client issues a state mutation to the active leader.
+2. **Log Appending**: Leader writes the entry to its local Write-Ahead Log (WAL).
+3. **Heartbeat & Replication**: Leader sends AppendEntries RPCs to all follower replicas.
+4. **Quorum Acknowledgment**: Once a majority of followers acknowledge receipt, the entry is committed.
+5. **State Machine Execution**: Entry is applied to the state machine and returned to the client.
+
+## 💡 Practical Examples
+- **Apache Kafka / Etcd / ZooKeeper**: Implement CP consensus for cluster metadata coordination.
+- **Amazon DynamoDB / Apache Cassandra**: Tunable consistency models allowing AP configurations for ultra-high availability.
+
+## ⚠️ Common Mistakes
+- Assuming networks are reliable and latency is zero (Fallacies of Distributed Computing).
+- Relying on NTP wall-clock timestamps for strict transaction ordering instead of logical/vector clocks.
+- Failing to handle Split-Brain scenarios where two partitions elect conflicting leaders.
+
+## 🔁 Quick Revision
+- CAP theorem dictates CP vs AP during partition.
+- Raft leader election uses randomized timers (150-300ms).
+- LSM-trees turn random writes into sequential disk flushes for 10x write performance.
+`;
 
 function NotesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
   const type = searchParams.get('type') || 'summary';
-  const filename = searchParams.get("filename") || "Document";
-  const notes = searchParams.get("notes") || "No notes generated.";
+  const filename = searchParams.get("filename") || "Distributed Systems Guide.pdf";
+  const rawNotes = searchParams.get("notes");
+  const notes = (rawNotes && rawNotes !== "No notes generated.") ? rawNotes : DEFAULT_NOTES;
 
-  const [isGenerating, setIsGenerating] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsGenerating(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(notes);
-
     setCopied(true);
-
     setTimeout(() => {
       setCopied(false);
     }, 2000);
@@ -36,7 +64,7 @@ function NotesContent() {
   const handleExportPDF = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8000/api/export/pdf",
+        getApiUrl("/api/export/pdf"),
         {
           method: "POST",
           headers: {

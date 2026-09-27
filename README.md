@@ -19,9 +19,18 @@ StudyForge AI is an AI-powered academic productivity platform that transforms ra
 
 ## 📸 Interface Showcase
 
-| Interactive Study Workspace | Document Upload & Extraction Studio |
+| 🚀 Landing & Upload Studio | 📊 Interactive Study Workspace |
 | :---: | :---: |
-| ![StudyForge Dashboard](assets/screenshots/studyforge-dashboard.png) | ![StudyForge Studio](assets/screenshots/studyforge-landing.png) |
+| ![StudyForge Landing](assets/screenshots/studyforge-landing.png) | ![StudyForge Dashboard](assets/screenshots/studyforge-dashboard.png) |
+
+| ❓ Adaptive Knowledge Quiz | 🧠 Active Recall Flashcards |
+| :---: | :---: |
+| ![StudyForge Quiz](assets/screenshots/studyforge-quiz.png) | ![StudyForge Flashcards](assets/screenshots/studyforge-flashcards.png) |
+
+<p align="center">
+  <b>📘 Synthesized Multi-Agent Study Notes & Key Takeaways</b><br/>
+  <img src="assets/screenshots/studyforge-notes.png" alt="StudyForge Synthesized Notes" width="100%" />
+</p>
 
 ---
 
