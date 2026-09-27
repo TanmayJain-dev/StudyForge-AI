@@ -1,14 +1,35 @@
 # 🚀 StudyForge AI
 
-> Intelligent AI-Powered Study Assistant
+<p align="center">
+  <a href="https://studyforge-ai-ui.vercel.app"><img src="https://img.shields.io/badge/Live%20Demo-studyforge--ai--ui.vercel.app-2563eb?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" /></a>
+  <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Python-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/AI%20Agents-Multi--Agent-blueviolet?style=for-the-badge" alt="AI Agents" />
+  <img src="https://img.shields.io/badge/TailwindCSS-4-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
+</p>
+
+> **Intelligent AI-Powered Multi-Agent Study Assistant**
 
 StudyForge AI is an AI-powered academic productivity platform that transforms raw study materials into structured learning resources. The application helps students upload documents and automatically generate smart study content such as notes, flashcards, quizzes, and revision sheets.
+
+🔗 **Live Production Application:** [https://studyforge-ai-ui.vercel.app](https://studyforge-ai-ui.vercel.app)
+
+---
+
+## 📸 Interface Showcase
+
+| Interactive Study Workspace | Document Upload & Extraction Studio |
+| :---: | :---: |
+| ![StudyForge Dashboard](assets/screenshots/studyforge-dashboard.png) | ![StudyForge Studio](assets/screenshots/studyforge-landing.png) |
+
+---
 
 ## ✨ What It Generates
 
 - 📘 Smart AI Notes
 - 🧠 Active Recall Flashcards
-- ❓ Practice Quizzes
+- ❓ Practice Quizzes & Flashcards
 - ⚡ Rapid Revision Sheets
 - 📄 Exportable Study Material PDFs
 
